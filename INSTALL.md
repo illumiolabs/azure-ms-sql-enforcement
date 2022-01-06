@@ -61,24 +61,34 @@ You can use the following link to do so: https://janikarhunen.fi/how-to-install-
 
       ![](images/illumio-ruleset-key.jpg)
 
-1. Setup the environment variables with the Illumio PCE API and Azure configuration information obtained [earlier](#azure-configuration)
-   ```bash
-   export AZURE_SUBSCRIPTION_ID=<subscription-id>
-   export AZURE_CLIENT_ID=<appId>
-   export AZURE_CLIENT_SECRET=<password>
-   export AZURE_TENANT_ID=<tenant>
-   export RESOURCE_GROUP=<resource group of the Azure MS SQL database>
+1. Setup the environment variables with the Illumio PCE API and Azure configuration information in the set-env.sh file:
+   ```
+   export AZURE_SUBSCRIPTION_ID="obtained from above section"
+   export AZURE_CLIENT_ID="appId in above section"
+   export AZURE_CLIENT_SECRET="password from above section"
+   export AZURE_TENANT_ID="tenant from above section"
+   export RESOURCE_GROUP='resource group of the Azure MS SQL database'
    export ILO_API_VERSION=2
    # Replace PCE-URL with the PCE hostname in your deployment without the https
-   export ILLUMIO_SERVER=<PCE-URL>
-   export ILO_API_KEY_ID=<API-KEY-ID>
-   export ILO_ORG_ID=<ORG ID>
-   export ILO_PORT=<PCE Port>
-   export ILO_API_KEY_SECRET=<API-KEY-SECRET>
+   export ILLUMIO_SERVER=<PCE-URL>:8443
+   export ILO_API_KEY_ID=API-KEY-ID
+   export ILO_ORG_ID=1
+   export ILO_PORT=8443
+   export ILO_API_KEY_SECRET=API-KEY-SECRET
    export ILLUMIO_RULESET_KEY=<key to be obtained as shown above>
    export POLL_TIMER=600
+
    ```
-1. Run the following command to configure Azure SQL firewall from PCE ruleset:
-   ```bash
-   python3 src/create_sql_fw_rule.py
+1. Once, the set-env.sh file is set, run the following command
+   ``` 
+   chmod +x set-env.sh; source ./set-env.sh
    ```
+1. Also, verify that the above environment variables are visible when the following command is run inside the virtual environment, on the machine
+   ```
+   env
+   ```
+1. Run the following command to start the Illumio enforcer:
+   ```
+   cd azure-ms-sql-illumio-enforcer/src; sh run.sh
+   ```
+1. The service will log on the console as it programs the firewall rules for the MS SQL database server

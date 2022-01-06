@@ -1,10 +1,12 @@
-## Changelog since v0.0.1 - 2020-01-08
+## 2022-01-04
 
 ### Added
-* Initial Version of Illumio Enforcer for Azure MS SQL Database server
+- command line instructions
 
 ### Fixed
-- Nothing.
+- updated to Python 3.9
+- Azure python authentication mechanism
+- Azure API for SQL syntax
 
 ### Removed
-- Nothing.
+- VM creation instructions

@@ -63,13 +63,13 @@ source venv/bin/activate
 
       ![](images/illumio-ruleset-key.jpg)
 
-1. Setup the environment variables with the Illumio PCE API and Azure configuration information:
+1. Setup the environment variables with the Illumio PCE API and Azure configuration information obtained [earlier](#azure-configuration)
    ```bash
-   export AZURE_SUBSCRIPTION_ID="obtained from above section"
-   export AZURE_CLIENT_ID="appId in above section"
-   export AZURE_CLIENT_SECRET="password from above section"
-   export AZURE_TENANT_ID="tenant from above section"
-   export RESOURCE_GROUP='resource group of the Azure MS SQL database'
+   export AZURE_SUBSCRIPTION_ID=<subscription-id>
+   export AZURE_CLIENT_ID=<appId>
+   export AZURE_CLIENT_SECRET=<password>
+   export AZURE_TENANT_ID=<tenant>
+   export RESOURCE_GROUP=<resource group of the Azure MS SQL database>
    export ILO_API_VERSION=2
    # Replace PCE-URL with the PCE hostname in your deployment without the https
    export ILLUMIO_SERVER=<PCE-URL>
@@ -84,3 +84,4 @@ source venv/bin/activate
    ```bash
    python3 src/create_sql_fw_rule.py
    ```
+

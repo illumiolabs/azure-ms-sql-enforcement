@@ -2,7 +2,7 @@ For our Illumio enforcer script to work, we would need the programming capabilit
 
 ## Configuration
 
-### Illumio PCE Configuration
+### Illumio ASP Configuration
    1. We would need API credentials from Illumio ASP for the enforcer to make the REST API call.
    1. You could get this information from the PCE UI. Follow the below steps to generate the credentials for the Illumio enforcer.
    1. We will need these credentials later

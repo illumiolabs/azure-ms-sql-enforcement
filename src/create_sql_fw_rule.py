@@ -13,9 +13,8 @@
 #   limitations under the License.
 
 
-from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.sql import SqlManagementClient
-from azure.common.credentials import ServicePrincipalCredentials
+from azure.identity import DefaultAzureCredential
 import requests
 import os
 import time
@@ -132,41 +131,31 @@ def update_illumio_policies():
 
 def create_azure_fw_rule(status_dict):
     RESOURCE_GROUP = os.environ['RESOURCE_GROUP']
-    subscription_id = os.environ.get(
-        'AZURE_SUBSCRIPTION_ID',
-        '11111111-1111-1111-1111-111111111111')
-    credentials = ServicePrincipalCredentials(
-        client_id=os.environ['AZURE_CLIENT_ID'],
-        secret=os.environ['AZURE_CLIENT_SECRET'],
-        tenant=os.environ['AZURE_TENANT_ID']
-                                             )
-    resource_client = ResourceManagementClient(credentials, subscription_id)
-    sql_client = SqlManagementClient(credentials, subscription_id)
-    resource_client.providers.register('Microsoft.Sql')
+    subscription_id = os.environ['AZURE_SUBSCRIPTION_ID']
+    # open connection to Azure SQL service
+    default_credential = DefaultAzureCredential()
+    sql_client = SqlManagementClient(default_credential, subscription_id)
     for index in range(len(status_dict['ip_list'])):
         for entry in status_dict['ip_list'][index]:
+            SQL_SERVER = status_dict['db_instance_identifier'][index]
             if type(entry) == dict:
-                SQL_SERVER = status_dict['db_instance_identifier'][index]
                 if '/' in entry['start']:
                     n = ipaddress.IPv4Network(entry['start'])
                     entry['start'], entry['end'] = n[0], n[-1]
                 rule_name = 'firewall_rule_for_ip_list_' + str(entry['start'])
-                firewall_rule = sql_client.firewall_rules.create_or_update(RESOURCE_GROUP, SQL_SERVER, rule_name, entry['start'], entry['end'])
+                firewall_rule = sql_client.firewall_rules.create_or_update(RESOURCE_GROUP, SQL_SERVER, rule_name, {"start_ip_address": entry['start'], "end_ip_address": entry['end']})
                 print('Adding the rule', firewall_rule)
             else:
-                SQL_SERVER = status_dict['db_instance_identifier'][index]
                 rule_name = 'firewall_rule_for_workload_' + str(entry)
-                firewall_rule = sql_client.firewall_rules.create_or_update(RESOURCE_GROUP, SQL_SERVER, rule_name, entry, entry)
+                firewall_rule = sql_client.firewall_rules.create_or_update(RESOURCE_GROUP, SQL_SERVER, rule_name, {"start_ip_address": entry, "end_ip_address": entry})
                 print('Adding the rule', firewall_rule)
     return firewall_rule
 
 
 def main():
-    while(True):
-        status_dict = update_illumio_policies()
-        # Open access to this server for IPs
-        create_azure_fw_rule(status_dict)
-        time.sleep(int(os.environ['POLL_TIMER']))
+    status_dict = update_illumio_policies()
+    # Open access to this server for IPs
+    create_azure_fw_rule(status_dict)
 
 
 if __name__ == '__main__':

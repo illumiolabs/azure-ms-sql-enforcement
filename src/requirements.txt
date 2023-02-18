@@ -12,7 +12,7 @@ isodate==0.6.1
 msal==1.16.0
 msal-extensions==0.3.1
 msrest==0.6.21
-oauthlib==3.1.1
+oauthlib==3.2.2
 portalocker==2.3.2
 pycparser==2.21
 PyJWT==2.4.0

@@ -3,7 +3,7 @@ azure-core==1.21.1
 azure-identity==1.7.1
 azure-mgmt-core==1.3.0
 azure-mgmt-sql==3.0.1
-certifi==2022.12.7
+certifi==2023.7.22
 cffi==1.15.0
 charset-normalizer==2.0.10
 cryptography==39.0.1
